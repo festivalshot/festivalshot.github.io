@@ -46,7 +46,8 @@ AWS_SECRET_ACCESS_KEY="$R2_SECRET_ACCESS_KEY" \
 aws s3 cp "$FILE" "s3://${R2_BUCKET}/${R2_KEY}" \
   --endpoint-url "$R2_ENDPOINT" \
   --region auto \
-  --content-type "image/jpeg"
+  --content-type "image/jpeg" \
+  --cache-control "public, max-age=31536000, immutable"
 
 echo "Uploaded: ${PUBLIC_URL}/${R2_KEY}"
 

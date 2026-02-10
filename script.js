@@ -106,3 +106,12 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowLeft") prevPhoto();
   if (e.key === "ArrowRight") nextPhoto();
 });
+
+// Assemble email from data attributes (anti-crawler)
+document.querySelectorAll(".email[data-u][data-d]").forEach((el) => {
+  const addr = `${el.dataset.u}@${el.dataset.d}`;
+  const link = document.createElement("a");
+  link.href = `mailto:${addr}`;
+  link.textContent = addr;
+  el.replaceWith(link);
+});
