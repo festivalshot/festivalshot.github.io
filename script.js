@@ -9,6 +9,8 @@ function formatDate(iso) {
 let photos = [];
 let filtered = [];
 let lightboxIndex = -1;
+let currentIndex = 0;
+let autoScrollTimer = null;
 
 const gallery = document.getElementById("gallery");
 const search = document.getElementById("search");
@@ -23,10 +25,12 @@ fetch("photos.json")
     photos = data;
     filtered = photos;
     render(filtered);
+    startAutoScroll();
   });
 
 function render(items) {
   gallery.innerHTML = "";
+  currentIndex = 0;
   items.forEach((photo, i) => {
     const figure = document.createElement("figure");
     const img = document.createElement("img");
@@ -48,6 +52,63 @@ function render(items) {
   });
 }
 
+// Auto-scroll every 5 seconds, wrapping around
+function startAutoScroll() {
+  stopAutoScroll();
+  autoScrollTimer = setInterval(() => {
+    if (lightbox.hidden && filtered.length > 1) {
+      scrollToIndex(currentIndex + 1);
+    }
+  }, 5000);
+}
+
+function stopAutoScroll() {
+  if (autoScrollTimer) {
+    clearInterval(autoScrollTimer);
+    autoScrollTimer = null;
+  }
+}
+
+function scrollToIndex(index) {
+  const figures = gallery.querySelectorAll("figure");
+  if (figures.length === 0) return;
+  currentIndex = index % figures.length;
+  figures[currentIndex].scrollIntoView({ behavior: "smooth" });
+}
+
+// Track current index from manual scrolling
+let scrollTimeout = null;
+gallery.addEventListener("scroll", () => {
+  // Reset auto-scroll timer on manual interaction
+  startAutoScroll();
+
+  clearTimeout(scrollTimeout);
+  scrollTimeout = setTimeout(() => {
+    const figures = gallery.querySelectorAll("figure");
+    const galleryRect = gallery.getBoundingClientRect();
+    for (let i = 0; i < figures.length; i++) {
+      const rect = figures[i].getBoundingClientRect();
+      if (Math.abs(rect.top - galleryRect.top) < 10) {
+        currentIndex = i;
+        break;
+      }
+    }
+  }, 100);
+}, { passive: true });
+
+// Infinite scroll — when reaching the end, jump back to start
+gallery.addEventListener("scrollend", () => {
+  const figures = gallery.querySelectorAll("figure");
+  if (figures.length === 0) return;
+  const last = figures[figures.length - 1];
+  const galleryRect = gallery.getBoundingClientRect();
+  const lastRect = last.getBoundingClientRect();
+  if (Math.abs(lastRect.top - galleryRect.top) < 10) {
+    // At the last photo — wrap to first on next advance
+    currentIndex = figures.length - 1;
+  }
+});
+
 // Search / filter
 search.addEventListener("input", () => {
   const q = search.value.toLowerCase().trim();
@@ -55,6 +116,7 @@ search.addEventListener("input", () => {
     ? photos.filter((p) => p.artist.toLowerCase().includes(q))
     : photos;
   render(filtered);
+  startAutoScroll();
 });
 
 // Lightbox
@@ -62,11 +124,13 @@ function openLightbox(index) {
   lightboxIndex = index;
   showLightboxPhoto();
   lightbox.hidden = false;
+  stopAutoScroll();
 }
 
 function closeLightbox() {
   lightbox.hidden = true;
   lightboxIndex = -1;
+  startAutoScroll();
 }
 
 function showLightboxPhoto() {
@@ -78,18 +142,15 @@ function showLightboxPhoto() {
   lightboxCaption.textContent = parts.join(" — ");
 }
 
+// Lightbox wraps around too
 function prevPhoto() {
-  if (lightboxIndex > 0) {
-    lightboxIndex--;
-    showLightboxPhoto();
-  }
+  lightboxIndex = (lightboxIndex - 1 + filtered.length) % filtered.length;
+  showLightboxPhoto();
 }
 
 function nextPhoto() {
-  if (lightboxIndex < filtered.length - 1) {
-    lightboxIndex++;
-    showLightboxPhoto();
-  }
+  lightboxIndex = (lightboxIndex + 1) % filtered.length;
+  showLightboxPhoto();
 }
 
 lightbox.querySelector(".lightbox-close").addEventListener("click", closeLightbox);
@@ -106,4 +167,3 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowLeft") prevPhoto();
   if (e.key === "ArrowRight") nextPhoto();
 });
-
