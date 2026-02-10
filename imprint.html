@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imprint — FestivalShot</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1><a href="/">FestivalShot</a></h1>
+  </header>
+
+  <main class="imprint-page">
+    <h2>Imprint</h2>
+    <div id="imprint-address"></div>
+    <p>Contact: <span class="email" data-u="festivalshot" data-d="posteo.de"></span></p>
+    <p>All photos taken with press/photo accreditation.</p>
+  </main>
+
+  <footer>
+    <p>&copy; FestivalShot · <a href="/">Back to Gallery</a></p>
+  </footer>
+
+  <script>
+    const R2_BASE = "https://photos.festivalshot.com";
+
+    // Load address from R2
+    fetch(`${R2_BASE}/imprint.json`)
+      .then((res) => res.json())
+      .then((data) => {
+        document.getElementById("imprint-address").innerHTML =
+          `<p>${data.name}<br>${data.street}<br>${data.city}</p>`;
+      });
+
+    // Assemble email (anti-crawler)
+    document.querySelectorAll(".email[data-u][data-d]").forEach((el) => {
+      const addr = `${el.dataset.u}@${el.dataset.d}`;
+      const link = document.createElement("a");
+      link.href = `mailto:${addr}`;
+      link.textContent = addr;
+      el.replaceWith(link);
+    });
+  </script>
+</body>
+</html>

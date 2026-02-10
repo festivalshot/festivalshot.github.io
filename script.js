@@ -107,20 +107,3 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowRight") nextPhoto();
 });
 
-// Assemble email from data attributes (anti-crawler)
-document.querySelectorAll(".email[data-u][data-d]").forEach((el) => {
-  const addr = `${el.dataset.u}@${el.dataset.d}`;
-  const link = document.createElement("a");
-  link.href = `mailto:${addr}`;
-  link.textContent = addr;
-  el.replaceWith(link);
-});
-
-// Load imprint from R2 (keeps address out of the public repo)
-fetch(`${R2_BASE}/imprint.json`)
-  .then((res) => res.json())
-  .then((data) => {
-    const el = document.getElementById("imprint");
-    el.innerHTML =
-      `<p class="imprint">${data.name}<br>${data.street}<br>${data.city}</p>`;
-  });
