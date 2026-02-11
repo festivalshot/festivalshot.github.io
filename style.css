@@ -233,7 +233,6 @@ body:has(.imprint-page) {
 .imprint-page p {
   margin-top: 0.5rem;
   color: #aaa;
-  text-align: left;
   line-height: 1.6;
 }
 
@@ -244,6 +243,10 @@ body:has(.imprint-page) {
 
 .imprint-page a:hover {
   color: #fff;
+}
+
+.privacy-page {
+  text-align: left;
 }
 
 header a {
