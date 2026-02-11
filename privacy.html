@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — FestivalShot</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1><a href="/">FestivalShot</a></h1>
+  </header>
+
+  <main class="imprint-page">
+    <h2>Privacy Policy</h2>
+
+    <h3>Controller</h3>
+    <p id="privacy-address"></p>
+    <p>Contact: <span class="email" data-u="festivalshot" data-d="posteo.de"></span></p>
+
+    <h3>Hosting</h3>
+    <p>
+      This website is hosted on GitHub Pages (GitHub Inc., 88 Colin P Kelly Jr St,
+      San Francisco, CA 94107, USA). When you visit this site, GitHub may collect
+      your IP address in server logs. See
+      <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">GitHub's Privacy Statement</a>.
+    </p>
+
+    <h3>Content Delivery</h3>
+    <p>
+      Images and static assets are served via Cloudflare (Cloudflare Inc.,
+      101 Townsend St, San Francisco, CA 94107, USA). Cloudflare may process
+      your IP address to deliver content. See
+      <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare's Privacy Policy</a>.
+    </p>
+
+    <h3>Data Processing</h3>
+    <p>
+      This website does not use cookies, analytics, tracking scripts, or
+      contact forms. No personal data is collected beyond what is technically
+      necessary to deliver the website (IP addresses processed by the hosting
+      and CDN providers listed above).
+    </p>
+
+    <h3>Legal Basis</h3>
+    <p>
+      The processing of IP addresses is based on our legitimate interest in
+      providing and securing this website (Art. 6(1)(f) GDPR).
+    </p>
+
+    <h3>Your Rights</h3>
+    <p>
+      Under the GDPR, you have the right to access, rectification, erasure,
+      restriction of processing, data portability, and the right to object.
+      To exercise these rights, contact us at the email address above.
+      You also have the right to lodge a complaint with a supervisory authority.
+    </p>
+  </main>
+
+  <footer>
+    <p>&copy; FestivalShot · <a href="/">Back to Gallery</a></p>
+  </footer>
+
+  <script>
+    const R2_BASE = "https://photos.festivalshot.com";
+
+    // Load address from R2
+    fetch(`${R2_BASE}/imprint.json`)
+      .then((res) => res.json())
+      .then((data) => {
+        document.getElementById("privacy-address").innerHTML =
+          `${data.name}<br>${data.street}<br>${data.city}`;
+      });
+
+    // Assemble email (anti-crawler)
+    document.querySelectorAll(".email[data-u][data-d]").forEach((el) => {
+      const addr = `${el.dataset.u}@${el.dataset.d}`;
+      const link = document.createElement("a");
+      link.href = `mailto:${addr}`;
+      link.textContent = addr;
+      el.replaceWith(link);
+    });
+  </script>
+</body>
+</html>

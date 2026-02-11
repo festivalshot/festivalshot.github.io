@@ -223,9 +223,18 @@ body:has(.imprint-page) {
   margin-bottom: 1rem;
 }
 
+.imprint-page h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.3rem;
+  font-size: 1rem;
+  color: #ccc;
+}
+
 .imprint-page p {
-  margin-top: 0.8rem;
+  margin-top: 0.5rem;
   color: #aaa;
+  text-align: left;
+  line-height: 1.6;
 }
 
 .imprint-page a {
