@@ -262,3 +262,50 @@ footer a {
 footer a:hover {
   color: #aaa;
 }
+
+/* Mobile */
+@media (max-width: 600px) {
+  #search {
+    max-width: 50%;
+  }
+
+  figcaption {
+    padding: 3rem 1rem 1rem;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  figcaption .location,
+  figcaption .date {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .lightbox-close,
+  .lightbox-prev,
+  .lightbox-next {
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox-prev,
+  .lightbox-next {
+    top: auto;
+    bottom: 3.5rem;
+    transform: none;
+  }
+
+  .lightbox-caption {
+    font-size: 1.05rem;
+    bottom: 0.5rem;
+    max-width: 70%;
+  }
+
+  footer {
+    font-size: 0.85rem;
+  }
+}
